@@ -50,6 +50,6 @@ public class OpenXRFeatureFrameTime : OpenXRFeature {
     private static extern void SetGpuTimeCallback(ReceiveGpuFrameTimeDelegate callback);
     
     private delegate void ReceiveCpuFrameTimeDelegate(double frameTime);
-    [DllImport(ExtLib, EntryPoint = "script_set_Cpu_time_callback")]
+    [DllImport(ExtLib, EntryPoint = "script_set_cpu_time_callback")]
     private static extern void SetCpuTimeCallback(ReceiveCpuFrameTimeDelegate callback);
 }
