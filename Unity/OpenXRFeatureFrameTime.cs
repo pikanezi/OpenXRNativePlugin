@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
     FeatureId = featureId)]
 #endif
 public class OpenXRFeatureFrameTime : OpenXRFeature {
-    public const string featureId = "com.vneel.openxr.feature.gpuframetime";
+    public const string featureId = "com.vneel.openxr.feature.frameTime";
     
     public static double gpuFrameTime { get; private set; }
     public static double cpuFrameTime { get; private set; }
