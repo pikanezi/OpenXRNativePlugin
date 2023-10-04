@@ -9,14 +9,13 @@
 typedef void (*SendOpenXrGpuTime_pfn)(double openXrGpuTime);
 typedef void (*SendOpenXrCpuTime_pfn)(double openXrCpuTime);
 
+static IUnityLog* unityLogPtr = nullptr;
 static PFN_xrGetInstanceProcAddr s_xrGetInstanceProcAddr = nullptr;
 static PFN_xrBeginFrame s_xrBeginFrame = nullptr;
 static PFN_xrWaitFrame s_xrWaitFrame= nullptr;
 
 std::chrono::high_resolution_clock::time_point last_gpu_time;
 std::chrono::high_resolution_clock::time_point last_cpu_time;
-
-static IUnityLog* unityLogPtr = nullptr;
 
 static SendOpenXrGpuTime_pfn send_gpu_time = nullptr;
 static SendOpenXrCpuTime_pfn send_cpu_time = nullptr;
@@ -44,16 +43,16 @@ static XrResult XRAPI_PTR intercepted_xrWaitFrame(XrSession session, const XrFra
 	return result;
 }
 
-static XrResult XRAPI_PTR intercept_functions_xrGetInstanceProcAddr(XrInstance instance, const char* name, PFN_xrVoidFunction* function)
+static XrResult XRAPI_PTR intercept_functions_xrGetInstanceProcAddr(XrInstance instance, const char* name,
+	PFN_xrVoidFunction* function)
 {
 	XrResult result = s_xrGetInstanceProcAddr(instance, name, function);
-	auto str_name = std::string(name);
-	if ("xrBeginFrame" == str_name)
+	if (strcmp("xrBeginFrame", name) == 0)
 	{
 		s_xrBeginFrame = (PFN_xrBeginFrame)*function;
 		*function = (PFN_xrVoidFunction)intercepted_xrBeginFrame;
 	}
-	if ("xrWaitFrame" == str_name)
+	if (strcmp("xrWaitFrame", name) == 0)
 	{
 		s_xrWaitFrame = (PFN_xrWaitFrame)*function;
 		*function = (PFN_xrVoidFunction)intercepted_xrWaitFrame;
