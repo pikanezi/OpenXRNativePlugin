@@ -36,11 +36,6 @@ static XrResult XRAPI_PTR intercepted_xrBeginFrame(XrSession session, const XrFr
 static XrResult XRAPI_PTR intercepted_xrWaitFrame(XrSession session, const XrFrameWaitInfo* frameWaitInfo, XrFrameState* frameState)
 {
 	XrResult result = s_xrWaitFrame(session, frameWaitInfo, frameState);
-	auto now = std::chrono::high_resolution_clock::now();
-	auto cpu_time = std::chrono::duration_cast<std::chrono::nanoseconds>(now - last_cpu_time).count();
-	last_cpu_time = now;
-	send_cpu_time((double)cpu_time);
-
 	return result;
 }
 
